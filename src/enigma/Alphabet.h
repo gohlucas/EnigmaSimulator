@@ -1,3 +1,5 @@
+#pragma once
+
 class Alphabet {
 public:
     // Characters will always be valid when gui is up

@@ -1,74 +1,62 @@
-#include "Plugboard.h"
+#include "Reflector.h"
 #include "Alphabet.h"
 
-
-Plugboard::Plugboard() {
-    for (int i = 0; i < 26; i++) {
-        insert(i, i);
+Reflector::Reflector() {
+    for (int i = 0; i < 26; i+=2) {
+        insert(i, i + 1);
+        insert(i + 1, i);
     }
     isInitialised = false;
 }
 
-// Remove existing mapping and create a new link between the 2 characters to simulate connecting a cable across
-bool Plugboard::insert(int character, int mapping) {
+bool Reflector::insert(int character, int mapping) {
     int charPair = getMapping(character);
     int mapPair = getMapping(mapping);
     
     alphabetMap.erase(character);
-    alphabetMap.erase(mapping);
+    alphabetMap.erase(charPair);
 
-    if (charPair != character) {
-        alphabetMap.erase(charPair);
-        alphabetMap.insert({charPair, charPair});
-    }
-    
-    if (mapPair != mapping) {
-        alphabetMap.erase(mapPair);
-        alphabetMap.insert({mapPair, mapPair});
-    }
+    alphabetMap.erase(mapping);
+    alphabetMap.erase(mapPair);
 
     alphabetMap.insert({character, mapping});
     alphabetMap.insert({mapping, character});
-    
+    alphabetMap.insert({charPair, mapPair});
+    alphabetMap.insert({mapPair, charPair});
     return true;
 }
 
-int Plugboard::getMapping(int character) {
+int Reflector::getMapping(int character) {
     auto search = alphabetMap.find(character);
     int res = (search == alphabetMap.end()) ? -1 : search->second;
     return res;    
 }
 
-bool Plugboard::configureMapping(std::string alphabets) {
+bool Reflector::configureMapping(std::string alphabets) {
     bool isValid = validateMapping(alphabets);
     if (!isValid) {
         return false;
     }
-
     std::transform(alphabets.begin(), alphabets.end(), alphabets.begin(),
         [](unsigned char c) { return std::toupper(c); });
 
     for (int i = 0; i < 26; i++) {
         char n = alphabets.at(i);
         int mappedChar = Alphabet::charToInt(n);
-        if (i == mappedChar) {
-            continue;
-        }
-        char x = alphabets.at(mappedChar);
-        int other = Alphabet::charToInt(x);
-    
+  
         if (mappedChar > i) {
-            Plugboard::insert(i, mappedChar);
+            Reflector::insert(i, mappedChar);
         }
     }
+    isInitialised = true;
 }
 
-bool Plugboard::validateMapping(std::string alphabets) {
+bool Reflector::validateMapping(std::string alphabets) {
+    
     int leng = alphabets.length();
     if (leng != 26) {
         return false;
     }
-
     std::transform(alphabets.begin(), alphabets.end(), alphabets.begin(),
         [](unsigned char c) { return std::toupper(c); });
     
@@ -76,7 +64,7 @@ bool Plugboard::validateMapping(std::string alphabets) {
         char n = alphabets.at(i);
         int mappedChar = Alphabet::charToInt(n);
         if (i == mappedChar) {
-            continue;
+            return false;
         }
         char x = alphabets.at(mappedChar);
         int other = Alphabet::charToInt(x);
@@ -84,5 +72,9 @@ bool Plugboard::validateMapping(std::string alphabets) {
             return false;
         }
     }
+}
+
+bool Reflector::isValid() {
+    return isInitialised;
 }
 

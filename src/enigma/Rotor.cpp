@@ -1,8 +1,55 @@
 #include "Rotor.h"
+#include "Alphabet.h"
+#include <set>
+
 // rotate -> forward pass -> backward pass
 
-Rotor::Rotor(std::unordered_map<int, int> alphabetArr, int notch) 
-: alphabetOrder(alphabetArr), notchPos(notch) {}
+Rotor::Rotor(std::string alphabetStr, int notch) {
+    bool isValid = validateMapping(alphabetStr);
+    if (!isValid) {
+        printf("Failure\n");
+    }
+    alphabetOrder = configureMapping(alphabetStr);
+}
+
+bool Rotor::validateMapping(std::string alphabets) {
+    std::set<int> seen;
+
+    int leng = alphabets.length();
+    if (leng != 26) {
+        return false;
+    }
+
+    std::transform(alphabets.begin(), alphabets.end(), alphabets.begin(),
+        [](unsigned char c) { return std::toupper(c); });
+    
+    for (int i = 0; i < 26; i++) {
+        char n = alphabets.at(i);
+        int mappedChar = Alphabet::charToInt(n);
+        if (i == mappedChar) {
+            return false;
+        }
+        auto search = seen.find(mappedChar);
+        if (search != seen.end()) {
+            return false;
+        }
+        seen.insert(mappedChar);
+    }
+    return true;
+}
+
+std::unordered_map<int, int> Rotor::configureMapping(std::string alphabets) {
+    std::unordered_map<int, int> umap;
+    std::transform(alphabets.begin(), alphabets.end(), alphabets.begin(),
+        [](unsigned char c) { return std::toupper(c); });
+
+    for (int i = 0; i < 26; i++) {
+        char n = alphabets.at(i);
+        int mappedChar = Alphabet::charToInt(n);
+        umap.insert(i, mappedChar);
+    }
+    return umap;
+}
 
 bool Rotor::Rotate(void) {
     offset = (offset + 1) % 26;
@@ -27,6 +74,6 @@ int Rotor::backwardPass(int character) {
     return it->second;
 }
 
-bool Rotor::isInitialised() {
+bool Rotor::isValid() {
     return notchPos != -1;
 }

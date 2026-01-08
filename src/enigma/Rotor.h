@@ -1,10 +1,10 @@
-#ifndef ROTOR_H
-#define ROTOR_H
+#pragma once
+#include <string>
 #include <unordered_map>
 
-// do array then offset, when enter the char converted to index then will switch to that number
-// then offset for curr rotor and then pass to next rotor, once curr offset hits 26 then modulo 
-// back to 0 and next rotor offset ++
+// Rotates based on order of position
+// First rotor rotates every key press
+// Subsequent rotor rotates every full revolution of Previous Rotor
 class Rotor {
    
 public:
@@ -12,10 +12,11 @@ public:
     int notchPos = -1;
     int offset = 0;
 
-    Rotor(std::unordered_map<int, int>, int);
+    Rotor(std::string, int);
     bool Rotate(void);
     int forwardPass(int);
     int backwardPass(int);
-    bool isInitialised(void);
+    bool isValid(void);
+    bool validateMapping(std::string);
+    std::unordered_map<int, int> configureMapping(std::string);
 };
-#endif

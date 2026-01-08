@@ -2,15 +2,15 @@
 
 #include "AlphabetMappings.h"
 
-// Optional Pairing to swap letters before entering and after leaving rotor holder
-class Plugboard: public AlphabetMappings {
+// Maps incoming signal to a paired output and sends it back through the rotor 
+// Consists of 13 two way pairings
+class Reflector: public AlphabetMappings {
 private:
     std::unordered_map<int ,int> alphabetMap;
     bool isInitialised;
 public:
-    
-    // Initialise start state where each alphabet maps to itself to simulate a plugboard with no cables attached
-    Plugboard();
+    // Initialises 13 two way pairings
+    Reflector();
     // Insert individual mappings of alphabets X->A etc
     bool insert(int, int);
     // Retrieve individual mapping for encryption
