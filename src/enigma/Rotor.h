@@ -12,6 +12,7 @@ public:
     int notchPos = -1;
     int offset = 0;
 
+    Rotor() = default;
     Rotor(std::string, int);
     bool Rotate(void);
     int forwardPass(int);

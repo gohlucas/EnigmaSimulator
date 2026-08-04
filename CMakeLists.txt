@@ -2,6 +2,9 @@ cmake_minimum_required(VERSION 4.1.2)
 
 project(Enigma)
 
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
 if(APPLE)
     list(APPEND CMAKE_PREFIX_PATH "/opt/homebrew/opt/qt")
 endif()
@@ -20,10 +23,24 @@ qt6_wrap_ui(UI_HEADERS ui/mainwindow.ui)
 set(SOURCES
     src/main.cpp
     src/mainwindow.cpp
+    src/enigma/EnigmaConfig.cpp
+    src/enigma/EnigmaMachine.cpp
+    src/enigma/Plugboard.cpp
+    src/enigma/Reflector.cpp
+    src/enigma/Rotor.cpp
+    src/enigma/RotorHolder.cpp
 )
 
 set(HEADERS
     src/mainwindow.h
+    src/enigma/Alphabet.h
+    src/enigma/AlphabetMappings.h
+    src/enigma/EnigmaConfig.h
+    src/enigma/EnigmaMachine.h
+    src/enigma/Plugboard.h
+    src/enigma/Reflector.h
+    src/enigma/Rotor.h
+    src/enigma/RotorHolder.h
 )
 
 set(UIS

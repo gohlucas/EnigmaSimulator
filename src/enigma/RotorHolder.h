@@ -1,4 +1,6 @@
 // Holds the 3 rotors and passes signal to subsequent rotor to rotate once the previous rotor spun 1 full revolution
+#pragma once
+
 #include "Rotor.h"
 
 // Holds the 3 Rotors and signals subsequent rotors to rotate
@@ -10,6 +12,7 @@ private:
     Rotor Rotor3;
     bool isInitialised = false;
 public:
+    RotorHolder();
     void setRotor(Rotor&, int);
     void rotate(void);
     int forwardEncrypt(int);

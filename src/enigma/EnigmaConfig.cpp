@@ -1,5 +1,11 @@
 #include "EnigmaConfig.h"
 
+EnigmaConfig::EnigmaConfig(Plugboard& p, Reflector& r, Rotor& r1, Rotor& r2, Rotor& r3) {
+    EnigmaConfig::setPlugboard(p);
+    EnigmaConfig::setReflector(r);
+    EnigmaConfig::setRotor(r1, r2, r3);
+}
+
 void EnigmaConfig::setRotor(Rotor& r1, Rotor& r2, Rotor& r3) {
     rotors.setRotor(r1, 1);
     rotors.setRotor(r2, 2);

@@ -36,8 +36,8 @@ void EnigmaMachine::run() {
         output = Alphabet::intToChar(encrypt(input));
         outputStr += output;
     }
-    printf("Here was the user provided input: %s", inputStr);
-    printf("Here is the generated output: %s", outputStr);
+    printf("Here was the user provided input: %s", inputStr.c_str());
+    printf("Here is the generated output: %s", outputStr.c_str());
 }
 
 void EnigmaMachine::initialise(EnigmaConfig e) {
@@ -47,6 +47,9 @@ void EnigmaMachine::initialise(EnigmaConfig e) {
 }
 
 int EnigmaMachine::encrypt(char c) {
+    // Rotors step once per keypress, before the signal passes through them
+    this->rotors.rotate();
+
     int input = Alphabet::charToInt(c);
     int plugboard1 = this->plugboard.getMapping(input);
     int rotorsForward = this->rotors.forwardEncrypt(plugboard1);
@@ -54,6 +57,25 @@ int EnigmaMachine::encrypt(char c) {
     int rotorsBackward = this->rotors.backwardEncrypt(reflector);
     int plugboard2 = this->plugboard.getMapping(rotorsBackward);
     return plugboard2;
+}
+
+void EnigmaMachine::createConfig(std::string plugboard, std::string reflector, std::string rotor1, std::string rotor2, std::string rotor3) {
+    Plugboard p = Plugboard();
+    p.configureMapping(plugboard);
+
+    Reflector r = Reflector();
+    r.configureMapping(reflector);
+
+    Rotor r1 = Rotor(rotor1, 0);
+
+    Rotor r2 = Rotor(rotor2, 0);
+
+    Rotor r3 = Rotor(rotor3, 0);
+
+    EnigmaConfig e = EnigmaConfig(p, r, r1, r2, r3);
+    this->e = e;
+    // Load the freshly built config so the machine is immediately usable
+    this->initialise(this->e);
 }
 
 void EnigmaMachine::userInit() {
@@ -78,6 +100,8 @@ void EnigmaMachine::userInit() {
 
     std::cout << "Enter rotor 3 configuration: "; 
     std::getline(std::cin, rotorConfig3);
+
+    EnigmaMachine::createConfig(plugboardConfig, reflectorConfig, rotorConfig1, rotorConfig2, rotorConfig3);
 
     std::cout << "Validating initialisation..." << '\n';
     std::cout << "Initialisation complete." << '\n';

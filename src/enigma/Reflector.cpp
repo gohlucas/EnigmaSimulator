@@ -1,5 +1,7 @@
 #include "Reflector.h"
 #include "Alphabet.h"
+#include <algorithm>
+#include <cctype>
 
 Reflector::Reflector() {
     for (int i = 0; i < 26; i+=2) {
@@ -9,6 +11,7 @@ Reflector::Reflector() {
     isInitialised = false;
 }
 
+// Mapping A<->X and Y<->C exist, insert X<->Y will force A<->C mapping
 bool Reflector::insert(int character, int mapping) {
     int charPair = getMapping(character);
     int mapPair = getMapping(mapping);
@@ -49,6 +52,7 @@ bool Reflector::configureMapping(std::string alphabets) {
         }
     }
     isInitialised = true;
+    return true;
 }
 
 bool Reflector::validateMapping(std::string alphabets) {
@@ -57,9 +61,21 @@ bool Reflector::validateMapping(std::string alphabets) {
     if (leng != 26) {
         return false;
     }
+    
+    std::set<char> seen;
+
     std::transform(alphabets.begin(), alphabets.end(), alphabets.begin(),
         [](unsigned char c) { return std::toupper(c); });
     
+    for (int i = 0; i < 26; i++) {
+        char x = alphabets.at(i);
+        if (seen.contains(x)) {
+            printf("Error, duplicate mappings found\n");
+            return false;
+        }
+        seen.insert(x);
+    }
+
     for (int i = 0; i < 26; i++) {
         char n = alphabets.at(i);
         int mappedChar = Alphabet::charToInt(n);
@@ -68,10 +84,11 @@ bool Reflector::validateMapping(std::string alphabets) {
         }
         char x = alphabets.at(mappedChar);
         int other = Alphabet::charToInt(x);
-        if (x != i) {
+        if (other != i) {
             return false;
         }
     }
+    return true;
 }
 
 bool Reflector::isValid() {

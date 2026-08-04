@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(g++ -std=c++23 -c src/enigma/RotorHolder.cpp -I src/enigma -o /tmp/rh.o)",
+      "Bash(rm -rf build_test)",
+      "Bash(cmake -S . -B build_test -DCMAKE_BUILD_TYPE=Debug)",
+      "Bash(cmake --build build_test)",
+      "Bash(echo \"EXIT:$?\")",
+      "Read(//private/tmp/**)",
+      "Bash(echo \"CMAKE BUILD EXIT:$?\")",
+      "Bash(g++ -std=c++20 -g -fsanitize=address,undefined /tmp/enigma_verify.cpp src/enigma/EnigmaConfig.cpp src/enigma/EnigmaMachine.cpp src/enigma/Plugboard.cpp src/enigma/Reflector.cpp src/enigma/Rotor.cpp src/enigma/RotorHolder.cpp -I src/enigma -o /tmp/enigma_verify)",
+      "Bash(/tmp/enigma_verify)"
+    ]
+  }
+}

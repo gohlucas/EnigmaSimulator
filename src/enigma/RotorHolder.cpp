@@ -1,6 +1,8 @@
 #include "RotorHolder.h"
 #include "Rotor.h"
 
+RotorHolder::RotorHolder() = default;
+
 void RotorHolder::setRotor(Rotor& rotor, int position){
     switch(position) {
         case 1:
@@ -43,4 +45,8 @@ int RotorHolder::backwardEncrypt(int character) {
     int SecondRotorBackward = Rotor2.backwardPass(thirdRotorBackward);
     int firstRotorBackward = Rotor1.backwardPass(SecondRotorBackward);
     return firstRotorBackward;
+}
+
+bool RotorHolder::isValid() {
+    return isInitialised;
 }
